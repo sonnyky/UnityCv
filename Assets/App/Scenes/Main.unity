@@ -223,7 +223,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6912c5c2a0fd744a198d2aaf99759125, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ImagePath: /Users/sonny/Desktop/Images/mountain.jpeg
+  m_FolderPath: /Users/sonny/Desktop/Images/TestImages/
+  m_ImagePath: /Users/sonny/Desktop/Images/TestImages/test2.jpg
+  m_ImageToCompare: /Users/sonny/Desktop/Images/TestImages/test3.jpg
 --- !u!23 &1039910150
 MeshRenderer:
   m_ObjectHideFlags: 0
