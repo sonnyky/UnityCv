@@ -1,0 +1,7 @@
+{
+  "name": "UnityCv",
+  "export": [
+    "Assets/App/Plugins",
+    "Assets/App/Scripts/Shared"
+  ]
+}
