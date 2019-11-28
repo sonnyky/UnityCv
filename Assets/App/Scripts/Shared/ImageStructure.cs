@@ -8,7 +8,7 @@ using System;
 public class ImageStructure : MonoBehaviour {
 
 	[DllImport("UnityCvPlugin")]
-	private static extern float _CompareStructureSimilarityByPath(IntPtr bytesRef, IntPtr toCompare, int rows, int cols, int type);
+	private static extern float _CompareStructureSimilarity(IntPtr bytesRef, IntPtr toCompare, int rows, int cols, int type);
 
 	public static float GetImageStructureSimilarityByTexture(Texture2D texA, Texture2D texB, int type){
 		
@@ -59,4 +59,17 @@ public class ImageStructure : MonoBehaviour {
 		return result;
 	}
 
+	public static Texture2D Resize(Texture2D source, int newWidth, int newHeight)
+	{
+		source.filterMode = FilterMode.Point;
+		RenderTexture rt = RenderTexture.GetTemporary(newWidth, newHeight);
+		rt.filterMode = FilterMode.Point;
+		RenderTexture.active = rt;
+		Graphics.Blit(source, rt);
+		Texture2D nTex = new Texture2D(newWidth, newHeight);
+		nTex.ReadPixels(new Rect(0, 0, newWidth, newWidth), 0, 0);
+		nTex.Apply();
+		RenderTexture.active = null;
+		return nTex;
+	}
 }
