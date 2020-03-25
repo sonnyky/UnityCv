@@ -15,7 +15,7 @@ public class NativeLibAdapter
 	*/
 	#elif UNITY_EDITOR
 	[DllImport("UnityCvPlugin")]
-	private static extern int TestFunction_Internal();
+	private static extern int _TestFunction_Internal();
 
 	[DllImport("UnityCvPlugin")]
 	private static extern void _SaveBlackAndWhite(IntPtr bytes, int rows, int cols, int type);
@@ -35,9 +35,9 @@ public class NativeLibAdapter
 	public static int Test()
 	{
 		#if !UNITY_EDITOR
-		return TestFunction_Internal();
+		return _TestFunction_Internal();
 		#elif UNITY_EDITOR
-		return TestFunction_Internal();
+		return _TestFunction_Internal();
 		#else
 		return -1;
 		#endif
