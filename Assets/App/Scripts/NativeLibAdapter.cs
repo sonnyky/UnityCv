@@ -20,7 +20,13 @@ public class NativeLibAdapter
 	[DllImport("UnityCvPlugin")]
 	private static extern void _SaveBlackAndWhite(IntPtr bytes, int rows, int cols, int type);
 
-	[DllImport("UnityCvPlugin")]
+    [DllImport("UnityCvPlugin")]
+    private static extern void _TransformImage(IntPtr bytes, IntPtr bytesOut, int rows, int cols, float angle, float scale, int transX, int transY);
+
+    [DllImport("UnityCvPlugin")]
+    private static extern void _DetectOuterHull(IntPtr bytes, int rows, int cols, int type);
+
+    [DllImport("UnityCvPlugin")]
 	private static extern float _TestGetImageShapeSimilarity();
 
 	[DllImport("UnityCvPlugin")]
@@ -43,6 +49,19 @@ public class NativeLibAdapter
 		#endif
 	}
 
+    public static void DetectOuterHull(string imagePath)
+    {
+        byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+        Texture2D tmpTexture = new Texture2D(1, 1);
+        tmpTexture.LoadImage(imageBytes);
+        Color32[] pixelData = tmpTexture.GetPixels32();
+
+        GCHandle pixelHandle = GCHandle.Alloc(pixelData, GCHandleType.Pinned);
+        IntPtr pixelPtr = pixelHandle.AddrOfPinnedObject();
+
+        _DetectOuterHull(pixelPtr, 1241, 1755, 1);
+    }
+
 	public static void SaveBlackAndWhite(string imagePath)
 	{
 
@@ -54,7 +73,7 @@ public class NativeLibAdapter
 		GCHandle pixelHandle = GCHandle.Alloc(pixelData, GCHandleType.Pinned);
 		IntPtr pixelPtr = pixelHandle.AddrOfPinnedObject();
 
-		_SaveBlackAndWhite(pixelPtr, 334, 500, 1);
+		_SaveBlackAndWhite(pixelPtr, 1080, 1920, 1);
 	}
 
 	public static float TestFloat ()
@@ -132,5 +151,39 @@ public class NativeLibAdapter
 		RenderTexture.active = null;
 		return nTex;
 	}
+
+    public static void TransformImage(string inputImagePath)
+    {
+        byte[] imageBytes = System.IO.File.ReadAllBytes(inputImagePath);
+        Texture2D tmpTexture = new Texture2D(1, 1);
+        tmpTexture.LoadImage(imageBytes);
+        Color32[] pixelData = tmpTexture.GetPixels32();
+
+        GCHandle pixelHandle = GCHandle.Alloc(pixelData, GCHandleType.Pinned);
+        IntPtr inputPtr = pixelHandle.AddrOfPinnedObject();
+
+        GCHandle outputHandle;
+        IntPtr outputImage;
+        Texture2D tex;
+        Color32[] pixel32;
+
+        tex = new Texture2D(tmpTexture.width, tmpTexture.height, TextureFormat.RGBA32, false);
+        pixel32 = tex.GetPixels32();
+        //Pin pixel32 array
+        outputHandle = GCHandle.Alloc(pixel32, GCHandleType.Pinned);
+        //Get the pinned address
+        outputImage = outputHandle.AddrOfPinnedObject();
+
+        _TransformImage(inputPtr, outputImage, tmpTexture.height, tmpTexture.width, 90f, 0.5f, 0, 0);
+        tex.SetPixels32(pixel32);
+        tex.Apply();
+
+        byte[] output = tex.EncodeToPNG();
+        System.IO.File.WriteAllBytes("output_transformed.png", output);
+
+        pixelHandle.Free();
+        outputHandle.Free();
+
+    }
 
 }
