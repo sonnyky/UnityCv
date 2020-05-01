@@ -17,46 +17,27 @@ public class Controller : MonoBehaviour
 	public string m_ImagePath = "Image";
 	public string m_ImageToCompare = "ToCompare";
 
-	void Awake()
-	{
-		Debug.LogWarning("Test Value in C++ is " + NativeLibAdapter.Test());
-
-		Debug.Log ("Test float : " + NativeLibAdapter.TestFloat());
-			//NativeLibAdapter.SaveBlackAndWhite (m_ImagePath);
-
-	}
+    public string m_TestSiftMarker = "SiftTest";
+    public string m_TestSiftCompare = "SiftCompare";
 
 	void Start(){
+        
+        // Save a black and white image
+        NativeLibAdapter.SaveBlackAndWhite(m_ImagePath);
 
-		float timeNow = Time.realtimeSinceStartup;
-		/*
-		string[] filePaths= Directory.GetFiles(m_FolderPath,"*.jpg");
+        // Detect edges and outer hull
+        NativeLibAdapter.DetectOuterHull(m_ImagePath);
 
-		for (int i = 0; i < filePaths.Length; i++) {
-			float similarity = NativeLibAdapter.GetImageStructureSimilarity (m_ImagePath, filePaths[i]);
-			string result = " is different";
-			if(similarity < 0.0001f) result = " is same";
-			Debug.Log ("The image : " + filePaths[i] + " and similarity to ref : " + similarity + result);
-		}
-*/
+        // Compare image similarity by comparing shapes
+        float similarity = NativeLibAdapter.GetImageStructureSimilarity(m_ImagePath, m_ImageToCompare);
+        Debug.Log("Similarity from structure : " + similarity);
 
-		float similarity = NativeLibAdapter.GetImageStructureSimilarity (m_ImagePath, m_ImageToCompare, 2);
-		string result = " is different";
-		if(similarity < 0.0001f) result = " is same";
-		Debug.Log ("similarity : " + similarity + result);
+        // Compare image similarity by comparing feature points
+        NativeLibAdapter.GetImageSiftSimilarity(m_TestSiftMarker, m_TestSiftCompare);
 
-		/*
-		float similaritySift = NativeLibAdapter.GetImageSiftSimilarity (m_ImagePath, m_ImageToCompare);
-		string resultSift = " is different";
-		if(similaritySift < 0.0001f) resultSift = " is same";
-		Debug.Log ("similarity with SIFT : " + similaritySift + resultSift);
-*/
-		float timeAfterMethod = Time.realtimeSinceStartup;
+        // Crop and rotate image
+        NativeLibAdapter.TransformImage(m_ImagePath, 90f, 0.5f, 100, 100);
 
-		Debug.Log ("Elapsed time : " + (timeAfterMethod - timeNow));
-	}
+    }
 
-	void Update()
-	{
-	}
 }
