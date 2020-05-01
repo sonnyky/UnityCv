@@ -49,6 +49,14 @@ public class NativeLibAdapter
 		#endif
 	}
 
+    public static Texture2D LoadTextureFromPath(string path)
+    {
+        byte[] imageBytes = System.IO.File.ReadAllBytes(path);
+        Texture2D tmpTexture = new Texture2D(1, 1);
+        tmpTexture.LoadImage(imageBytes);
+        return tmpTexture;
+    }
+
     public static void DetectOuterHull(string imagePath)
     {
         byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
@@ -64,16 +72,13 @@ public class NativeLibAdapter
 
 	public static void SaveBlackAndWhite(string imagePath)
 	{
-
-		byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-		Texture2D tmpTexture = new Texture2D(1, 1);
-		tmpTexture.LoadImage(imageBytes);
+		Texture2D tmpTexture = LoadTextureFromPath(imagePath);
 		Color32[] pixelData = tmpTexture.GetPixels32();
 
 		GCHandle pixelHandle = GCHandle.Alloc(pixelData, GCHandleType.Pinned);
 		IntPtr pixelPtr = pixelHandle.AddrOfPinnedObject();
 
-		_SaveBlackAndWhite(pixelPtr, 1080, 1920, 1);
+		_SaveBlackAndWhite(pixelPtr, tmpTexture.height, tmpTexture.width, 1);
 	}
 
 	public static float TestFloat ()

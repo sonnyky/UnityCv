@@ -21,7 +21,7 @@ public class Controller : MonoBehaviour
         
         Debug.LogWarning("Test Value in C++ is " + NativeLibAdapter.Test());
         //NativeLibAdapter.DetectOuterHull(m_ImagePath);
-        NativeLibAdapter.TransformImage(m_ImagePath);
+        NativeLibAdapter.SaveBlackAndWhite(m_ImagePath);
     }
 
 }
