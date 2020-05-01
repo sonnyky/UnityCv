@@ -247,6 +247,8 @@ MonoBehaviour:
   m_FolderPath: /Users/sonny/Desktop/Images/TestImages/
   m_ImagePath: /Users/sonny/Desktop/Images/TestImages/fish.jpg
   m_ImageToCompare: /Users/sonny/Desktop/Images/TestImages/fish2.jpg
+  m_TestSiftMarker: /Users/sonny/Desktop/Images/TestImages/linux.jpg
+  m_TestSiftCompare: /Users/sonny/Desktop/Images/TestImages/os.png
 --- !u!23 &1039910150
 MeshRenderer:
   m_ObjectHideFlags: 0
